@@ -4,6 +4,11 @@ Version 1.0 v. 20.11.2023
 Dieses Programm ist für den ESP NodeMCU
 Aufabe ist es, die Informationen, die vom ETA Heizkessel kommen via mqtt zu transferieren
  
+
+Version 1.1 v. 19.01.2023
+Negative Temperaturwerte führten zu Überlauf, wird jetzt abgefangen
+in der Werteberechnung
+
 */
 
 
@@ -26,7 +31,7 @@ Aufabe ist es, die Informationen, die vom ETA Heizkessel kommen via mqtt zu tran
 
 
 
-String          Version                       = "V1.00: ";
+String          Version                       = "V1.10: ";
 String          AppName                       = "ETA-Transceiver";
 
 
@@ -355,6 +360,7 @@ void convert_readable() {
           //sprintf(mqttbuffer,"n: %d anzprot: %d wert:  %d",n,nr_sets,measureindex);
           //client.publish(mqtt_pub_info,mqttbuffer);
           value = ((rcv_buffer[n+1] * 256.0) +  rcv_buffer[n+2]) / 10.0;
+          if (value > 1000.0 ) value = value - 6553.5;
           sprintf(mqttbuffer,"%.1f",value);
 
           switch (measureindex) {
