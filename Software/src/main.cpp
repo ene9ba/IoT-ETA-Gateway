@@ -9,6 +9,8 @@ Version 1.1 v. 19.01.2023
 Negative Temperaturwerte führten zu Überlauf, wird jetzt abgefangen
 in der Werteberechnung
 
+Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
+
 */
 
 
@@ -31,7 +33,7 @@ in der Werteberechnung
 
 
 
-String          Version                       = "V1.10: ";
+String          Version                       = "V1.20: ";
 String          AppName                       = "ETA-Transceiver";
 
 
@@ -39,7 +41,10 @@ String          HOSTNAME                      = "IoT-ETA-Transceive.castle";
 const  char*    HOTSPOTNAME                   = "ETA-API";
 
 //MQTT-Server Einstellungen
-const char*     MQTT_SERVER                   = "VM2-MQTT";
+
+const char*     MQTT_SERVER                   = "docker-home";
+#define MQTT_USER "mymqtt"
+#define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
 
 // mqtt publish values
@@ -528,7 +533,7 @@ void loop() {
   //WiFi Verbindung prüfen
   if (!client.connected()) 
    {
-      mqtt_reconnect();
+      reconnect();
       client.setCallback(callback);
       mqtt_subscribe();
    }

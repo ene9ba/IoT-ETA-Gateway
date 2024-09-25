@@ -152,7 +152,8 @@ void setup_mqtt()
   
           while (!client.connected()) 
           {
-            client.connect((char*)MQTT_HostNameChar);
+            
+            client.connect((char*)MQTT_HostNameChar, MQTT_USER, MQTT_PW);
 
           
             Serial.print(".");
@@ -183,35 +184,37 @@ void setup_mqtt()
 *******************************************************************************************************************/
 
 
-void mqtt_reconnect() 
-    {   
-        // repeat trying connect 4 times, then reset
-        int retry = 0;
-        #define TRIES 3
-                 
-        
-        if (!client.connected()) 
-        {
-          while (retry <= TRIES)
-          {
-            Serial.println("Attempting MQTT reconnecti...");
-            // Attempt to connect
-            if (client.connect(HOSTNAME.c_str())) 
-            {
-              Serial.println("connected");
-              // Once connected, publish an announcement...
-              
-              client.publish(HOSTNAME.c_str(), " online");
 
-              delay(1500);
-              return; 
-            }
-            retry++;
-          }
-          //ESP.restart();     
 
-        }
-         
+
+void reconnect() {
+  // Loop until we're reconnected
+  IPAddress ip = WiFi.localIP();
+  String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+  String MQTT_HostName = HOSTNAME + ipStr;
+  char MQTT_HostNameChar[MQTT_HostName.length()];
+
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    
+    // Attempt to connect
+    client.setServer(MQTT_SERVER, 1883);
+    
+    if (client.connect((char*)MQTT_HostNameChar, MQTT_USER, MQTT_PW)) {
+      Serial.println("connected");
+      // Once connected, publish an announcement...
+      
+      
+    } 
+    else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      for (int i=0; i<5000; i++) {
+        delay(1);
+        ArduinoOTA.handle(); 
+      }
     }
-
-
+  }
+}
