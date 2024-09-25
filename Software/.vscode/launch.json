@@ -12,9 +12,9 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "D:/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
+            "executable": "/home/ene9ba/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
             "projectEnvName": "nodemcu",
-            "toolchainBinDir": "C:/Users/elmar/.platformio/packages/toolchain-xtensa/bin",
+            "toolchainBinDir": "/home/ene9ba/.platformio/packages/toolchain-xtensa/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -25,18 +25,18 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "D:/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
+            "executable": "/home/ene9ba/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
             "projectEnvName": "nodemcu",
-            "toolchainBinDir": "C:/Users/elmar/.platformio/packages/toolchain-xtensa/bin",
+            "toolchainBinDir": "/home/ene9ba/.platformio/packages/toolchain-xtensa/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "D:/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
+            "executable": "/home/ene9ba/project/Git/IoT/IoT-ETA-Gateway/Software/.pio/build/nodemcu/firmware.elf",
             "projectEnvName": "nodemcu",
-            "toolchainBinDir": "C:/Users/elmar/.platformio/packages/toolchain-xtensa/bin",
+            "toolchainBinDir": "/home/ene9ba/.platformio/packages/toolchain-xtensa/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
         }
