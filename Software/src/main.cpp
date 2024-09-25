@@ -18,7 +18,8 @@ Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
 #include <SoftwareSerial.h>
 
 
-#define _MQTT_DEBUG_
+#define __mqtt_DEBUG
+#define __serial_DEBUG
 
 //Portzuordnung
 #define BUILDIN_LED         2     // LED auf Board
@@ -54,6 +55,7 @@ const char*   mqtt_pub_RSSI                     = "/openHAB/ETA/RSSI";
 const char*   mqtt_pub_raw_answer               = "/openHAB/ETA/raw_answer";
 const char*   mqtt_pub_checksum                 = "/openHAB/ETA/chksm";
 const char*   mqtt_pub_info                     = "/openHAB/ETA/info";
+
 
 
 const char*   mqtt_pub_boiler                   = "/openHAB/ETA/Boilertemp";
@@ -167,7 +169,7 @@ void callback(char* topic, byte* payload, unsigned int length)
 
             String out="Message arrived, Topic : [" + str_topic + "] Payload : [" + str_payload + "]";
               
-            #ifdef _MQTT_DEBUG_
+            #ifdef __mqtt_DEBUG
                 
                 mqttDebugInfo(out);
                 Serial.print(out);
@@ -467,10 +469,11 @@ void setup() {
     //Zeit seit letztem Durchlauf berechen und die Sekunden in value hochz?hlen  
     long now = millis();
 
-    if (now - lastMsg2 < 30000) return;
+    if (now - lastMsg2 < 5000) return;
 
     int rssi = WiFi.RSSI();
 
+    ping(80,1);
     Serial.print("RSSI: ");
     Serial.print(rssi);
     Serial.println(" db");
@@ -519,24 +522,17 @@ void loop() {
    
 
   }
-  
-
-    
-
- 
-
-  
-
- 
 	
           
   //WiFi Verbindung prüfen
   if (!client.connected()) 
    {
-      reconnect();
-      client.setCallback(callback);
-      mqtt_subscribe();
+      setup_mqtt();
+      //reconnect();
+      //client.setCallback(callback);
+      //mqtt_subscribe();
    }
+
   client.loop();
 
   ArduinoOTA.handle();

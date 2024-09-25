@@ -20,6 +20,24 @@ PubSubClient client(espClient);
 
 
 
+/******************************************************************************************************************
+* Sendet Degug information auf den MQTT-Kanal
+* void mqttDebugInfo(String load ) 
+*******************************************************************************************************************/
+
+void DebugInfo(String load ) {
+     #ifdef __mqtt_DEBUG
+        #define MLEN 100   
+        char msg[MLEN];
+
+        load.toCharArray(msg,MLEN);
+        client.publish(mqtt_pub_Debug, msg);
+     #endif
+     #ifdef __serial_DEBUG
+        Serial.println(load);
+     #endif
+        
+     }
 
 
 void init_WiFiManger()
@@ -104,8 +122,6 @@ void init_OTA()
 void ping(int ontime, int repeat)
       {
 
-         
-          
                       if (ontime < 50) ontime=1000;
                       if (repeat < 1) repeat=1;
                       for (int i=0; i<repeat; i++)
@@ -165,56 +181,23 @@ void setup_mqtt()
 
             Serial.println("");
             Serial.println("NQTT-Server not found ...");
-            // delay(2000);
+            delay(2000);
             // ESP.restart();
         }
         else  
         {
+          
+          String str = " MQTT found address: " +  MQTT_HostName;
           Serial.println("");
-          Serial.print("MQTT found Adress: ");
-          Serial.println(MQTT_SERVER);
+          Serial.print(str);
+                    
+          DebugInfo(str);
 
         }
     }
 
 
-/******************************************************************************************************************
-  * void mqtt_reconnect()
-  * Verbindet sich mit dem MQTT-Server
-*******************************************************************************************************************/
 
 
 
 
-
-void reconnect() {
-  // Loop until we're reconnected
-  IPAddress ip = WiFi.localIP();
-  String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
-  String MQTT_HostName = HOSTNAME + ipStr;
-  char MQTT_HostNameChar[MQTT_HostName.length()];
-
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    
-    // Attempt to connect
-    client.setServer(MQTT_SERVER, 1883);
-    
-    if (client.connect((char*)MQTT_HostNameChar, MQTT_USER, MQTT_PW)) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      
-      
-    } 
-    else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      for (int i=0; i<5000; i++) {
-        delay(1);
-        ArduinoOTA.handle(); 
-      }
-    }
-  }
-}
