@@ -12,7 +12,7 @@ Der IoT-Kern ist ein ESP8266 WEMOS D1
 ![](https://github.com/ene9ba/IoT-ETA-Gateway/blob/main/GitHubDoc/Geh%C3%A4use%20ETA%20v13.png)
 
 Prototyp:
-![]()
+![](https://github.com/ene9ba/IoT-ETA-Gateway/blob/main/GitHubDoc/ETA-Prototyp.jpg)
 
 
 ## Funktion: 
