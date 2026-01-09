@@ -11,6 +11,8 @@ in der Werteberechnung
 
 Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
 
+Version 1.30 v. 09.01.2026 Nun wird über einen Drucksensor auch der Heizwasserdruck überwacht.
+
 */
 
 
@@ -26,6 +28,7 @@ Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
 #define RX_PIN              4     // serial receive pin
 #define TX_PIN              5     // serial transceive pin
 
+
 // config softwareserial
 #define BAUD_RATE           19200
 #define RX_BUFF_SIZE        200
@@ -34,7 +37,7 @@ Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
 
 
 
-String          Version                       = "V1.20: ";
+String          Version                       = "V1.30: ";
 String          AppName                       = "ETA-Transceiver";
 
 
@@ -48,6 +51,9 @@ const char*     MQTT_SERVER                   = "docker-home";
 #define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
 
+const int analogInPin = A0;  // ESP8266 Analog Pin ADC0 = A0
+
+
 // mqtt publish values
 const char*   mqtt_pub_Version                  = "/openHAB/ETA/Version";
 const char*   mqtt_pub_Debug                    = "/openHAB/ETA/Debug";
@@ -55,6 +61,9 @@ const char*   mqtt_pub_RSSI                     = "/openHAB/ETA/RSSI";
 const char*   mqtt_pub_raw_answer               = "/openHAB/ETA/raw_answer";
 const char*   mqtt_pub_checksum                 = "/openHAB/ETA/chksm";
 const char*   mqtt_pub_info                     = "/openHAB/ETA/info";
+const char*   mqtt_pub_pressure_raw             = "/openHAB/ETA/pressure_raw";
+const char*   mqtt_pub_pressure_voltage         = "/openHAB/ETA/pressure_voltage";
+const char*   mqtt_pub_pressure                 = "/openHAB/ETA/pressure";
 
 
 
@@ -86,6 +95,7 @@ long times=0;
 long    lastMsg = 0;
 long    lastMsg1 = 0;
 long    lastMsg2 = 0;
+long    lastMsg3 = 0;
 char    msg[150];
 char    msg1[150];
 // Kommandos
@@ -487,6 +497,48 @@ void setup() {
 
 }   
 
+
+
+void publishPressure()
+
+{
+
+    //Zeit seit letztem Durchlauf berechen und die Sekunden in value hochz?hlen  
+
+    #define t -667.9
+    #define m 1.225
+
+
+    long now = millis();
+
+    if (now - lastMsg3 < 5000) return;
+
+    int pressure_raw = analogRead(analogInPin);
+    float pressure_voltage = pressure_raw  / 1023.0 * 3300; 
+    float pressure = pressure_voltage * m + t;
+
+
+    Serial.print("pressure; ");
+    Serial.print(pressure_raw);
+    Serial.println(" bar");
+
+    // publish version
+    itoa(pressure_raw,msg,10);
+    client.publish(mqtt_pub_pressure_raw,msg);
+
+    sprintf (msg,"%.5f",pressure_voltage);
+    client.publish(mqtt_pub_pressure_voltage,msg);
+
+    sprintf (msg,"%.1f",pressure);
+    client.publish(mqtt_pub_pressure,msg);
+
+
+     lastMsg3= millis();
+
+}  
+
+
+
 void sendcommand() {
       long now = millis();
       if (now - lastMsg1 < 3600000) return;
@@ -506,6 +558,12 @@ void loop() {
   sendcommand();
 
   publishRSSI();
+
+
+  publishPressure();
+
+
+
   
   // so lange die bytes lesen, bis } erkannt wird, dann ist ein Telegram angekommen.
 
