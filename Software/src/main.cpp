@@ -13,6 +13,7 @@ Version 1.20 v. 25.09.2024 optimiertes reconnect und mqtt mit user und passwort
 
 Version 1.30 v. 09.01.2026 Nun wird über einen Drucksensor auch der Heizwasserdruck überwacht.
 
+Version 1.31 v. 08.02.2026 changed domain name from docker-home to docker-home-castle
 */
 
 
@@ -37,7 +38,7 @@ Version 1.30 v. 09.01.2026 Nun wird über einen Drucksensor auch der Heizwasserd
 
 
 
-String          Version                       = "V1.30: ";
+String          Version                       = "V1.31: ";
 String          AppName                       = "ETA-Transceiver";
 
 
@@ -46,7 +47,7 @@ const  char*    HOTSPOTNAME                   = "ETA-API";
 
 //MQTT-Server Einstellungen
 
-const char*     MQTT_SERVER                   = "docker-home";
+const char*     MQTT_SERVER                   = "docker-home.castle";
 #define MQTT_USER "mymqtt"
 #define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
