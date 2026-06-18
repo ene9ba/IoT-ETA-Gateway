@@ -47,7 +47,7 @@ const  char*    HOTSPOTNAME                   = "ETA-API";
 
 //MQTT-Server Einstellungen
 
-const char*     MQTT_SERVER                   = "docker-home.castle";
+const char*     MQTT_SERVER                   = "mqtt-srv1.castle";
 #define MQTT_USER "mymqtt"
 #define MQTT_PW   "yfAlORp1C3k70fy6XSkY"
 
